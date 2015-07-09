@@ -1,0 +1,2 @@
+from private import typeform_variables
+print typeform_variables.full_url
