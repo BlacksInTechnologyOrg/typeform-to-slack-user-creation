@@ -20,8 +20,8 @@ for x in range(0, len(data['responses'])):
         first_name = data['responses'][x]['answers']['textfield_8634882']
         payload = {'email': email_address, 'first_name': first_name, 'token': slack_variables.api_key, 'set_active': 'true', '_attempts': 1}
         r = requests.post(slack_variables.full_url, data=payload )
-        #if r.text == '{"ok":true}':
-        new_email_addresses.append(email_address)
+        if r.text == '{"ok":true}' or r.text == '{"ok":false,"error":"already_in_team"}' or r.text == '{"ok":false,"error":"already_invited"}':
+            new_email_addresses.append(email_address)
         print email_address + ' - ' + r.text
 
 f = open('private/processed_email_addresses.txt', 'a')
