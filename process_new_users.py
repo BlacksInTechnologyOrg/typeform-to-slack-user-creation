@@ -29,17 +29,14 @@ EMAIL_LIST = os.path.abspath(
 # Setting up logging
 log = logging.getLogger(__name__)
 formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
-log.setLevel(logging.DEBUG)
 
 fh = TimedRotatingFileHandler(
     os.path.join(LOG_DIR, "bot.log"), when="h", interval=1, backupCount=6
 )
 fh.setFormatter(formatter)
-fh.setLevel(logging.INFO)
 log.addHandler(fh)
 
 sh = logging.StreamHandler(sys.stdout)
-sh.setLevel(logging.DEBUG)
 sh.setFormatter(formatter)
 log.addHandler(sh)
 
@@ -50,6 +47,7 @@ class TypeFormToSlack:
         self.processed_email_addresses = self.get_processed_email_addresses()
         self.new_email_addresses = []
 
+        log.setLevel(self.config.LOG_LEVEL)
     def run(self):
         try:
             log.info("Starting script...")
@@ -147,7 +145,8 @@ class TypeFormToSlack:
                     self.new_email_addresses.append(email_address)
                 elif (
                     slackresp["error"] == "already_in_team_invited_user"
-                    or "already_in_team"
+                    or slackresp["error"] == "already_in_team"
+                    or slackresp["error"] == "'already_invited"
                 ):
                     log.info(f"{email_address} already processed, adding to file")
                     self.new_email_addresses.append(email_address)

@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv, find_dotenv
 
 
@@ -10,11 +11,10 @@ class Config:
     def __init__(self):
         load_dotenv(find_dotenv(usecwd=True))
 
-
 class ProductionConfig(Config):
     def __init__(self):
         super(ProductionConfig, self).__init__()
-
+        self.LOG_LEVEL = logging.INFO
         self.TYPEFORM_API_KEY = os.getenv("TYPEFORM_API_KEY")
         self.TYPEFORM_UID = os.getenv("TYPEFORM_UID")
         self.TYPEFORM_FIRST_NAME_ID = os.getenv("TYPEFORM_FIRST_NAME_FIELD_ID")
@@ -27,7 +27,7 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
     def __init__(self):
         super(TestingConfig, self).__init__()
-
+        self.LOG_LEVEL = logging.DEBUG
         self.TYPEFORM_API_KEY = os.getenv("TYPEFORM_API_KEY_TEST")
         self.TYPEFORM_UID = os.getenv("TYPEFORM_UID_TEST")
         self.TYPEFORM_FIRST_NAME_ID = os.getenv("TYPEFORM_FIRST_NAME_FIELD_ID_TEST")
